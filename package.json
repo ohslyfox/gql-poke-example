@@ -1,0 +1,21 @@
+{
+  "name": "gql-poke-example",
+  "version": "1.0.0",
+  "description": "gql-example",
+  "repository": "https://github.com/ohslyfox/gql-poke-example.git",
+  "author": "ohslyfox <patricksfinger@gmail.com>",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "client": "yarn workspace client start",
+    "server": "yarn workspace server start",
+    "start": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\""
+  },
+  "license": "MIT",
+  "private": true,
+  "devDependencies": {},
+  "dependencies": {
+    "concurrently": "^6.3.0"
+  }
+}
