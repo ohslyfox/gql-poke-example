@@ -16,9 +16,7 @@ export class NormalizedPokeApi {
       const list = await PokeApi.getPokemonList(page);
       if (list.results) {
         for (const result of list.results) {
-          const id = last(
-            result.url.substring(0, result.url.length - 1).split("/")
-          );
+          const id = this.trimIdFromUrl(result.url);
           if (id) {
             res.push(await this.getPokemon(id));
           }
@@ -33,14 +31,16 @@ export class NormalizedPokeApi {
     return res;
   }
 
-  private static async getPokemon(id: string): Promise<Poke.Pokemon> {
-    const pokemonInfo = await PokeApi.getPokemonInfo(id);
-    const evolution = await this.getPokemonEvolutionList(id);
+  public static async getPokemon(nameOrId: string): Promise<Poke.Pokemon> {
+    const info = await PokeApi.getPokemonInfo(nameOrId);
+    const species = await PokeApi.getPokemonSpeciesInfo(nameOrId);
+    const evolId = this.trimIdFromUrl(species.evolution_chain.url);
+    const evolution = await this.getPokemonEvolutionList(evolId);
 
     return {
-      name: pokemonInfo.name,
+      name: info.name,
       evolutionNames: evolution,
-      imageUrl: pokemonInfo.sprites?.front_default,
+      imageUrl: info.sprites?.front_default,
     };
   }
 
@@ -65,5 +65,9 @@ export class NormalizedPokeApi {
     }
 
     return res;
+  }
+
+  private static trimIdFromUrl(url: string): string {
+    return last(url.substring(0, url.length - 1).split("/"));
   }
 }

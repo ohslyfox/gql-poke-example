@@ -28,6 +28,7 @@ export const pokemonTypeResult = z.object({
 export type PokemonInfo = z.Infer<typeof pokemonInfo>;
 export const pokemonInfo = z
   .object({
+    id: z.number(),
     name: z.string(),
     sprites: z
       .object({ front_default: z.string().nullable() })
@@ -49,3 +50,16 @@ export const pokemonListResponse = z.object({
   previous: z.string().nullable(),
   results: z.array(pokemonListResult),
 });
+
+export type PokemonSpeciesResponse = z.Infer<typeof pokemonSpeciesResponse>;
+export const pokemonSpeciesResponse = z
+  .object({
+    id: z.number(),
+    name: z.string(),
+    evolution_chain: z
+      .object({
+        url: z.string(),
+      })
+      .allowUnknownKeys(),
+  })
+  .allowUnknownKeys();

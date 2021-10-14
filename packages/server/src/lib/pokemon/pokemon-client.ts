@@ -7,4 +7,8 @@ export class PokemonService implements Poke.PokemonApiClient {
   public async getPokemonList(count: number): Promise<Poke.Pokemon[]> {
     return await NormalizedPokeApi.listPokemon(count);
   }
+
+  public async getPokemon(name: string): Promise<Poke.Pokemon> {
+    return await NormalizedPokeApi.getPokemon(name);
+  }
 }

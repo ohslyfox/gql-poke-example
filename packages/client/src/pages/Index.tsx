@@ -6,8 +6,12 @@ import {
   Container,
   TextField,
 } from "@material-ui/core";
+import { useState } from "react";
+import { Pokemon } from "../components/Pokemon";
 
 export const Index: React.FC = () => {
+  const [text, setText] = useState("pikachu");
+  const [pokemonName, setPokemonName] = useState("pikachu");
   return (
     <Container>
       <Box component="span" sx={{ padding: 10, mx: "2px" }}>
@@ -27,11 +31,21 @@ export const Index: React.FC = () => {
                 fullWidth
                 inputProps={{ style: { textAlign: "center" } }}
                 defaultValue="pikachu"
+                onChange={(e) => setText(e.target.value)}
               />
             </Box>
           </CardContent>
           <CardContent>
-            <Button variant="contained" color="primary">Submit</Button>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => setPokemonName(text)}
+            >
+              Submit
+            </Button>
+          </CardContent>
+          <CardContent>
+            <Pokemon name={pokemonName}></Pokemon>
           </CardContent>
         </Card>
       </Box>

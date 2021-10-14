@@ -14,6 +14,17 @@ export class PokeApi {
     return await this.request(config, Entities.pokemonEvolutionResponse);
   }
 
+  public static async getPokemonSpeciesInfo(
+    id: string
+  ): Promise<Entities.PokemonSpeciesResponse> {
+    const config: AxiosRequestConfig = {
+      method: "get",
+      url: `pokemon-species/${id}`,
+    };
+
+    return await this.request(config, Entities.pokemonSpeciesResponse);
+  }
+
   public static async getPokemonInfo(
     id: string
   ): Promise<Entities.PokemonInfo> {
