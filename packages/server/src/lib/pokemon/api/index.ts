@@ -60,6 +60,7 @@ export class PokeApi {
       return schema.parse(res.data);
     } catch (e) {
       console.error(e);
+      throw e;
     }
   }
 

@@ -13,13 +13,13 @@ import { GqlContext } from "../types";
 @ObjectType()
 class Pokemon {
   @Field((type) => ID)
-  id: string;
+  id!: string;
 
   @Field()
-  name: string;
+  name!: string;
 
   @Field(type => [String])
-  evolutionNames: string[];
+  evolutionNames!: string[];
 
   @Field()
   imageUrl?: string;

@@ -10,10 +10,12 @@ export class NormalizedPokeApi {
    */
   public static async listPokemon(numToList?: number): Promise<Poke.Pokemon[]> {
     const res: Poke.Pokemon[] = [];
-    let page = "0";
+    let page: string | undefined = "0";
     let done = false;
     while (!done) {
-      const list = await PokeApi.getPokemonList(page);
+      const list: Entities.PokemonListResponse = await PokeApi.getPokemonList(
+        page
+      );
       if (list.results) {
         for (const result of list.results) {
           const id = this.trimIdFromUrl(result.url);
@@ -23,7 +25,7 @@ export class NormalizedPokeApi {
         }
       }
 
-      page = first(list.next?.match(/(?<=offset=)(\d+)/g));
+      page = first(list.next?.match(/(?<=offset=)(\d+)/g) ?? "");
       if (!page || (numToList && res.length >= numToList)) {
         done = true;
       }
@@ -40,7 +42,7 @@ export class NormalizedPokeApi {
     return {
       name: info.name,
       evolutionNames: evolution,
-      imageUrl: info.sprites?.front_default,
+      imageUrl: info.sprites?.front_default ?? undefined,
     };
   }
 
@@ -59,7 +61,7 @@ export class NormalizedPokeApi {
           if (current) {
             res.push(current.species.name);
           }
-          next = first(current.evolves_to);
+          next = first(current?.evolves_to);
         }
       }
     }
@@ -68,6 +70,6 @@ export class NormalizedPokeApi {
   }
 
   private static trimIdFromUrl(url: string): string {
-    return last(url.substring(0, url.length - 1).split("/"));
+    return last(url.substring(0, url.length - 1).split("/")) ?? "";
   }
 }

@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@types/lodash": "^4.14.175",
     "apollo-server": "^3.4.0",
     "axios": "^0.23.0",
     "class-validator": "^0.13.1",
