@@ -10,6 +10,7 @@
   "scripts": {
     "client": "yarn workspace client start",
     "server": "yarn workspace server start",
+    "watch": "tsc -b -w",
     "start": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\""
   },
   "license": "MIT",
