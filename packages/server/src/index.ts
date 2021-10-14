@@ -1,34 +1,31 @@
-import { ApolloServer, gql } from "apollo-server";
-import PokemonApiClient from "./lib/pokemon";
+import "reflect-metadata";
+import { ApolloServer } from "apollo-server";
+import { PokemonService } from "./lib/pokemon/pokemon-client";
+import { makeExecutableSchema } from "@graphql-tools/schema";
+import { GqlContext } from "./types";
+import { buildTypeDefsAndResolvers } from "type-graphql";
+import { PokemonResolver } from "./resolvers/pokemon";
 
-// A schema is a collection of type definitions (hence "typeDefs")
-// that together define the "shape" of queries that are executed against
-// your data.
-const typeDefs = gql`
-  type Pokemon {
-    name: String
-  }
+const main = async (): Promise<void> => {
+  const pokemonService = new PokemonService();
 
-  type Query {
-    pokemon: [Pokemon]
-  }
-`;
+  const { typeDefs, resolvers } = await buildTypeDefsAndResolvers({
+    resolvers: [PokemonResolver],
+  });
 
-// Resolvers define the technique for fetching the types defined in the
-// schema. This resolver retrieves books from the "books" array above.
-const resolvers = {
-  Query: {
-    pokemon: async () => pokeClient.getPokemonList(1),
-  },
+  const schema = makeExecutableSchema({ typeDefs, resolvers });
+
+  const server = new ApolloServer({
+    schema,
+    context: ({ req, res }) => {
+      return { req, res, pokemonService } as GqlContext;
+    },
+  });
+
+  // The `listen` method launches a web server.
+  server.listen().then(({ url }) => {
+    console.log(`🚀  Server ready at ${url}`);
+  });
 };
 
-// The ApolloServer constructor requires two parameters: your schema
-// definition and your set of resolvers.
-const server = new ApolloServer({ typeDefs, resolvers });
-
-const pokeClient = new PokemonApiClient();
-
-// The `listen` method launches a web server.
-server.listen().then(({ url }) => {
-  console.log(`🚀  Server ready at ${url}`);
-});
+main();

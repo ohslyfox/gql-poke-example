@@ -5,12 +5,16 @@
   "dependencies": {
     "apollo-server": "^3.4.0",
     "axios": "^0.23.0",
+    "class-validator": "^0.13.1",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "graphql": "^15.6.1",
+    "graphql-tools": "^8.2.0",
     "http": "^0.0.1-security",
     "lodash": "^4.17.21",
-    "myzod": "^1.8.6"
+    "myzod": "^1.8.6",
+    "reflect-metadata": "^0.1.13",
+    "type-graphql": "^1.1.1"
   },
   "scripts": {
     "start": "ts-node src/index.ts",

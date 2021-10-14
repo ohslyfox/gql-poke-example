@@ -1,3 +1,2 @@
-import { PokemonApiClient } from "./pokemon-client";
-
-export default PokemonApiClient;
+export * from "./pokemon-client";
+export * from "./types";
