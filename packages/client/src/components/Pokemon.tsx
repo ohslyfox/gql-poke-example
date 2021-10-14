@@ -18,7 +18,7 @@ export const Pokemon: React.FC<PokemonInput> = ({ name }) => {
       <Card>
         <CardContent>
           <p>{data.pokemon.name}</p>
-          <img src={data.pokemon.imageUrl} width="256"></img>
+          <img src={data.pokemon.imageUrl} width="256" alt="pokemon"></img>
         </CardContent>
         <CardContent>
           {data.pokemon.evolutionNames.map((n: string) => (
