@@ -32,7 +32,6 @@ const main = async (): Promise<void> => {
     app,
     cors: {
       origin: [
-        "*",
         "http://localhost:3000",
         "https://studio.apollographql.com",
       ],
