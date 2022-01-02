@@ -4,12 +4,8 @@ import * as Entities from "./types";
 import * as Poke from "../types";
 
 export class NormalizedPokeApi {
-  /**
-   * Gets a normalized pokemon list
-   * @param numToList, amount of pokemon to list, if undefined lists all
-   */
-  public static async listPokemon(numToList?: number): Promise<Poke.Pokemon[]> {
-    const res: Poke.Pokemon[] = [];
+  public static async listPokemon(numToList: number): Promise<string[]> {
+    const res: string[] = [];
     let page: string | undefined = "0";
     let done = false;
     while (!done) {
@@ -18,50 +14,61 @@ export class NormalizedPokeApi {
       );
       if (list.results) {
         for (const result of list.results) {
-          const id = this.trimIdFromUrl(result.url);
-          if (id) {
-            res.push(await this.getPokemon(id));
-          }
+          res.push(result.name);
         }
       }
 
       page = first(list.next?.match(/(?<=offset=)(\d+)/g) ?? "");
-      if (!page || (numToList && res.length >= numToList)) {
+      if (!page || (numToList !== 0 && res.length >= numToList)) {
         done = true;
       }
     }
-    return res;
+    return res
+      .filter((r) => !r.includes("-"))
+      .slice(0, numToList === 0 ? res.length : numToList);
   }
 
-  public static async getPokemon(nameOrId: string): Promise<Poke.Pokemon> {
-    const info = await PokeApi.getPokemonInfo(nameOrId);
+  public static async getPokemonWithEvolutions(
+    nameOrId: string
+  ): Promise<Poke.PokemonWithEvolutions> {
+    const info = await this.getPokemonInfo(nameOrId);
     const species = await PokeApi.getPokemonSpeciesInfo(nameOrId);
     const evolId = this.trimIdFromUrl(species.evolution_chain.url);
     const evolution = await this.getPokemonEvolutionList(evolId);
 
     return {
       name: info.name,
-      evolutionNames: evolution,
-      imageUrl: info.sprites?.front_default ?? undefined,
+      imageUrl: info.imageUrl,
+      evolutions: evolution,
     };
   }
 
-  private static async getPokemonEvolutionList(id: string): Promise<string[]> {
-    const res: string[] = [];
-    const data = await PokeApi.getPokemonEvolutionChain(id);
+  private static async getPokemonInfo(nameOrId: string): Promise<Poke.Pokemon> {
+    const info = await PokeApi.getPokemonInfo(nameOrId);
 
+    return {
+      name: info.name,
+      imageUrl: info.sprites.front_default ?? undefined,
+    };
+  }
+
+  private static async getPokemonEvolutionList(
+    id: string
+  ): Promise<Poke.Pokemon[]> {
+    const res: Poke.Pokemon[] = [];
+    const data = await PokeApi.getPokemonEvolutionChain(id);
     if (data.chain) {
-      if (data.chain.species.name) {
-        res.push(data.chain.species.name);
-      }
-      if (data.chain.evolves_to) {
-        let next: any | undefined = first(data.chain.evolves_to);
-        while (next) {
-          const current = Entities.pokemonEvolutionChain.parse(next);
-          if (current) {
-            res.push(current.species.name);
+      const q: unknown[] = [data.chain];
+      while (q.length > 0) {
+        const current = Entities.pokemonEvolutionChain.parse(q.shift());
+        if (current) {
+          if (current.evolves_to) {
+            q.push(...current.evolves_to);
           }
-          next = first(current?.evolves_to);
+          if (current.species) {
+            const info = await this.getPokemonInfo(current.species.name);
+            res.push(info);
+          }
         }
       }
     }

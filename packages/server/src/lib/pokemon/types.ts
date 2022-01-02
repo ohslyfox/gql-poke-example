@@ -1,9 +1,14 @@
 export interface Pokemon {
   name: string;
-  evolutionNames: string[];
   imageUrl?: string;
 }
 
+export interface PokemonWithEvolutions extends Pokemon {
+  evolutions: Pokemon[];
+}
+
 export interface PokemonApiClient {
-  getPokemonList(count: number): Promise<Pokemon[]>;
+  getRandomPokemonName(): Promise<string>;
+  getPokemonNames(count: number): Promise<string[]>;
+  getPokemon(name: string): Promise<PokemonWithEvolutions>;
 }

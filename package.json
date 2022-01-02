@@ -15,7 +15,6 @@
   },
   "license": "MIT",
   "private": true,
-  "devDependencies": {},
   "dependencies": {
     "concurrently": "^6.3.0"
   }

@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import { Card, CardContent, Container } from "@material-ui/core";
+import { Card, CardContent, Container, Grid } from "@material-ui/core";
 import { GET_POKEMON_BY_NAME } from "../gql";
 
 export interface PokemonInput {
@@ -23,14 +23,18 @@ export const Pokemon: React.FC<PokemonInput> = ({ name }) => {
     <Container>
       <Card>
         <CardContent>
-          <p>{data.pokemon.name}</p>
           <img src={imgUrl} width="256" alt="pokemon"></img>
         </CardContent>
-        <CardContent>
-          {data.pokemon.evolutionNames.map((n: string) => (
-            <p>{n}</p>
+        <Grid container spacing={2} justifyContent="center">
+          {data.pokemon.evolutions.map((e: any) => (
+            <Grid item xs={2} key={e.name}>
+              <>
+                <img src={e.imageUrl} alt={e.name}></img>
+                <p>{e.name}</p>
+              </>
+            </Grid>
           ))}
-        </CardContent>
+        </Grid>
       </Card>
     </Container>
   );

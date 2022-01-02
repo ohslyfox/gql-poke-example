@@ -7,9 +7,11 @@ import { buildTypeDefsAndResolvers } from "type-graphql";
 import { PokemonResolver } from "./resolvers/pokemon";
 import express from "express";
 import http from "http";
+import { ApolloServerPluginLandingPageDisabled } from "apollo-server-core";
 
 const main = async (): Promise<void> => {
   const pokemonService = new PokemonService();
+  await pokemonService.init();
 
   const app = express();
   const httpServer = http.createServer(app);
@@ -25,16 +27,14 @@ const main = async (): Promise<void> => {
     context: ({ req, res }) => {
       return { req, res, pokemonService } as GqlContext;
     },
+    plugins: [ApolloServerPluginLandingPageDisabled()],
   });
 
   await server.start();
   server.applyMiddleware({
     app,
     cors: {
-      origin: [
-        "http://localhost:3000",
-        "https://studio.apollographql.com",
-      ],
+      origin: ["http://localhost:3000", "https://studio.apollographql.com"],
       credentials: true,
     },
   });

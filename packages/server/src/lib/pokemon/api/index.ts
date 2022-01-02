@@ -44,7 +44,7 @@ export class PokeApi {
       url: "pokemon",
       params: {
         offset,
-        limit: 1,
+        limit: 100,
       },
     };
 

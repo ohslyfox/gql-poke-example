@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@types/lodash": "^4.14.175",
-    "apollo-server-express": "^3.4.0",
+    "apollo-server-express": "^3.4.1",
     "axios": "^0.23.0",
     "class-validator": "^0.13.1",
     "cors": "^2.8.5",
